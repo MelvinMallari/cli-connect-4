@@ -92,7 +92,7 @@ class Board:
     
     for diag in fdiag:
       if len(diag) < 4: continue
-      for i in range(len(diag)-3):
+      for i in range(len(diag) - 3):
         if self.validSymbol(diag[i]) and diag[i] == diag[i+1] == diag[i+2] == diag[i+3]:
           return True
     return False
@@ -104,7 +104,49 @@ class Board:
   def diagonalCheck(self):
     return self.fDiagCheck(self.board) or self.dDiagCheck(self.board)
 
+class ConnectFour:
+  def __init__(self):
+    self.board = Board()
+    self.currentPlayer = "X"
 
-board = Board()
-print(board)
-print(board.isWon())
+  def togglePlayer(self):
+    if self.currentPlayer == "X":
+      self.currentPlayer = "O"
+    else: 
+      self.currentPlayer = "X"
+
+  def getInput(self):
+    print(self.board)
+    col = input("Input col (1-7): ")
+    if self.board.put(int(col), self.currentPlayer):
+      self.togglePlayer()
+    else:
+      print("Invalid Column")
+      self.getInput()
+  
+  def gameWon(self):
+    if self.board.isWon():
+      self.togglePlayer()
+      print('\n')
+      print("Congrats Player {}!".format(self.currentPlayer))
+      print(self.board)
+      return True
+    return False
+
+  def gameTie(self):
+    if self.board.isFull():
+      print('\n')
+      print("Tie Game")
+      print(self.board)
+      return True
+    return False
+  
+  def play(self):
+    print("Welcome to CLI Connect 4!")
+    while True:
+      if self.gameWon(): break
+      if self.gameTie(): break
+      self.getInput()
+    print("Thanks for playing!")
+
+ConnectFour().play()
